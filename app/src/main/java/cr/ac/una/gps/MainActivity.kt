@@ -40,6 +40,14 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        TODO("Not yet implemented")
+        when (item.itemId){
+            R.id.home -> {
+
+            }
+            R.id.maps -> {
+
+            }
+        }
+        return true
     }
 }
