@@ -1,7 +1,8 @@
 package cr.ac.una.gps
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 
@@ -15,5 +16,15 @@ class MainActivity : AppCompatActivity() {
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         drawerLayout = findViewById(R.id.drawer_layout)
+
+        var toogle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
+        drawerLayout.addDrawerListener(toogle)
+        toogle.syncState()
     }
 }

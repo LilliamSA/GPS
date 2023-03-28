@@ -25,7 +25,8 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/main_menu"/>
+        android:layout_gravity="start"
+        app:menu="@menu/main_menu" />
     <!-- forma de associar las activities -->
 
 
