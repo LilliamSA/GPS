@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 
 
@@ -40,12 +41,15 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId){
+
+        lateinit var fragment: Fragment
+
+        when (item.itemId) {
             R.id.home -> {
 
             }
             R.id.maps -> {
-
+                fragment = MapsFragment()
             }
         }
         return true
