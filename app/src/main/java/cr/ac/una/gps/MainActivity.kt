@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         )
         drawerLayout.addDrawerListener(toogle)
         toogle.syncState()
+        val navegationView = findViewById<NavigationView>(R.id.navegation_view)
+        navegationView.setNavigationItemSelectedListener (this)
     }
 
     override fun onBackPressed() {
@@ -46,12 +48,19 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
         when (item.itemId) {
             R.id.home -> {
+                fragment = HomeFragment.newInstance("string1","string2")
 
             }
             R.id.maps -> {
                 fragment = MapsFragment()
             }
         }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.home_content, fragment)
+            .commit()
+        drawerLayout.closeDrawer(GravityCompat.START)
+
         return true
     }
 }
