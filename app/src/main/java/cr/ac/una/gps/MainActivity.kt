@@ -8,10 +8,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.navigation.NavigationView
 
 
-class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,13 +32,12 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         drawerLayout.addDrawerListener(toogle)
         toogle.syncState()
         val navegationView = findViewById<NavigationView>(R.id.navegation_view)
-        navegationView.setNavigationItemSelectedListener (this)
+        navegationView.setNavigationItemSelectedListener(this)
     }
 
     override fun onBackPressed() {
-    if(drawerLayout.isDrawerOpen(GravityCompat.START))
-        drawerLayout.closeDrawer(GravityCompat.START)
-
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START)
         else
             super.onBackPressed()
     }
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
         when (item.itemId) {
             R.id.home -> {
-                fragment = HomeFragment.newInstance("string1","string2")
+                fragment = HomeFragment.newInstance("string1", "string2")
 
             }
             R.id.maps -> {
