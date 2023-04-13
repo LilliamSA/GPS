@@ -6,4 +6,7 @@
     <string name="maps">gps</string>
     <string name="drawer_open">Abrir</string>
     <string name="drawer_close">Cerrar</string>
+    <string name="api_key">AIzaSyAcpnFVakm5l58PnZe9qtiGrIi0ODOK0Is</string>
+    <string name="configuracion">configuracion</string>
+    <string name="acercade">acerca de</string>
 </resources>
