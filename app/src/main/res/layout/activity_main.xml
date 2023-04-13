@@ -28,6 +28,7 @@
         app:headerLayout="@layout/nav_header"
         android:layout_gravity="start"
         app:menu="@menu/main_menu" />
+
     <!-- forma de associar las activities -->
 
 
