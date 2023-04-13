@@ -12,9 +12,15 @@
             android:id="@+id/maps"
             android:icon="@android:drawable/ic_menu_mapmode"
             android:title="@string/maps" />
-        <item android:id="@+id/acerda"
+        <item
+            android:id="@+id/acercade"
             android:icon="@android:drawable/ic_menu_mapmode"
             android:title="@string/acercade" />
+        <item
+            android:id="@+id/salir"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="@string/salir"/>
+
 
 
 
