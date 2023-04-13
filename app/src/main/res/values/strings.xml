@@ -9,4 +9,5 @@
     <string name="api_key">AIzaSyAcpnFVakm5l58PnZe9qtiGrIi0ODOK0Is</string>
     <string name="configuracion">configuracion</string>
     <string name="acercade">acerca de</string>
+    <string name="salir">salir</string>
 </resources>
