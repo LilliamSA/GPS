@@ -49,14 +49,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.maps -> {
                 fragment = MapsFragment()
             }
-            R.id.acercade -> {
+            R.id.Acercade -> {
                 fragment = AcercaDeFragment()
+                fragment.show(supportFragmentManager, "dialogo_acerca_de")
+                return true
             }
-            R.id.configuracion -> {
+
+            R.id.Configurations -> {
                 fragment = ConfiguracionFragment()
             }
         }
-
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.home_content, fragment)

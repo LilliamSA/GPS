@@ -29,6 +29,4 @@
         map:cameraTargetLat="9.9357"
         map:cameraTargetLng="-84.0833" />
 
-
-
 </androidx.drawerlayout.widget.DrawerLayout>
