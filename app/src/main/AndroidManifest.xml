@@ -14,9 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GPS"
         tools:targetApi="31">
-        <activity
-            android:name=".actitityAcercade"
-            android:exported="false" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
