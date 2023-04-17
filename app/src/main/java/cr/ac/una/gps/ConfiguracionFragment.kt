@@ -42,6 +42,8 @@ class ConfiguracionFragment : Fragment() {
 
         // Establecer el texto en el EditText
         editMarcador.setText(textoMarcador)
+
+        
     }
 
     private fun guardarMarcador() {

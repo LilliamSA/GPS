@@ -26,8 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-
-
+import com.google.android.material.slider.RangeSlider
 
 
 class MapsFragment : Fragment() {
@@ -36,6 +35,15 @@ class MapsFragment : Fragment() {
     private lateinit var maps: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var previousLocation: LatLng? = null
+
+
+/*
+    private fun createNewPing(): Ping {
+        val newPingId = nextPingId++
+        val newPing = Ping(LatLng(0.0, 0.0))
+        newPing.id = newPingId
+        return newPing
+    } */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,12 +74,15 @@ class MapsFragment : Fragment() {
 
         // Mover la cámara del mapa a la última ubicación guardada
         moveCameraToLastLocation()
+
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-
+/*
         // Obtén una referencia al botón de zoom in
         val btnZoomIn = view.findViewById<Button>(R.id.btnZoomIn)
 
@@ -85,6 +96,8 @@ class MapsFragment : Fragment() {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom + 1))
             }
         }
+ */
+/*
 
         // Obtén una referencia al botón de zoom out
         val btnZoomOut = view.findViewById<Button>(R.id.btnZoomOut)
@@ -99,6 +112,7 @@ class MapsFragment : Fragment() {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom - 1))
             }
         }
+        */
         // Obtén una referencia al botón de actualización
         val btnactualizar = view.findViewById<Button>(R.id.btnActualizar)
 
@@ -106,6 +120,20 @@ class MapsFragment : Fragment() {
         btnactualizar.setOnClickListener {
             getLocation()
         }
+        // Obtén una referencia al RangeSlider
+        val rsHeight = view.findViewById<RangeSlider>(R.id.rs_height)
+
+        // Agrega un listener al RangeSlider
+        rsHeight.addOnChangeListener { slider, value, fromUser ->
+            // Obtén una referencia al mapa
+            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+            mapFragment?.getMapAsync { googleMap ->
+                // Actualiza el nivel de zoom del mapa
+                val zoom = value.toFloat()
+                googleMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
+            }
+        }
+
 
         // Obtener el SupportMapFragment y notificar cuando el mapa esté listo para ser usado.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -185,4 +213,5 @@ class MapsFragment : Fragment() {
 
         }
     }
+
 }
