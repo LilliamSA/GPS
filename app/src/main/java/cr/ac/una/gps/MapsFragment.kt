@@ -35,7 +35,7 @@ class MapsFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var maps: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
+    private var previousLocation: LatLng? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,6 +47,25 @@ class MapsFragment : Fragment() {
         sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
 
         return view
+    }
+    private val callback = OnMapReadyCallback { googleMap ->
+        // Recuperar el valor guardado en SharedPreferences
+        val textoMarcador = sharedPreferences.getString("textoMarcador", "")
+
+        // Crear un marcador en el mapa con el texto recuperado
+        val latLng = LatLng(-34.0, 151.0)
+        googleMap.addMarker(MarkerOptions().position(latLng).title(textoMarcador))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
+
+        // Guardar una referencia al mapa
+        maps = googleMap
+
+        // Obtener la ubicación actual y mostrarla en el mapa
+        getLocation()
+
+        // Mover la cámara del mapa a la última ubicación guardada
+        moveCameraToLastLocation()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,13 +99,17 @@ class MapsFragment : Fragment() {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom - 1))
             }
         }
+        // Obtén una referencia al botón de actualización
+        val btnactualizar = view.findViewById<Button>(R.id.btnActualizar)
+
+        // Agrega un listener al botón de actualización
+        btnactualizar.setOnClickListener {
+            getLocation()
+        }
 
         // Obtener el SupportMapFragment y notificar cuando el mapa esté listo para ser usado.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync{
-            maps = it
-            getLocation()
-        }
+        mapFragment?.getMapAsync(callback)
 
     }
 
@@ -94,6 +117,15 @@ class MapsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
+    private fun saveLocation(location: Location?) {
+        location?.let {
+            val editor = sharedPreferences.edit()
+            editor.putFloat("lastLat", location.latitude.toFloat())
+            editor.putFloat("lastLng", location.longitude.toFloat())
+            editor.apply()
+        }
+    }
+
 
     private fun getLocation() {
         val textoMarcador = sharedPreferences.getString("textoMarcador", "")
@@ -110,9 +142,21 @@ class MapsFragment : Fragment() {
                         val currentLatLng = LatLng(location.latitude, location.longitude)
                         addMarkerToMap(currentLatLng, textoMarcador)
                         maps.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+
+                        // Guardar la ubicación actual
+                        saveLocation(location)
                     }
                 }
             }
+        }
+    }
+    private fun moveCameraToLastLocation() {
+        val lastLat = sharedPreferences.getFloat("lastLat", 0f).toDouble()
+        val lastLng = sharedPreferences.getFloat("lastLng", 0f).toDouble()
+
+        if (lastLat != 0.0 && lastLng != 0.0) {
+            val lastLatLng = LatLng(lastLat, lastLng)
+            maps.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLatLng, 15f))
         }
     }
 
