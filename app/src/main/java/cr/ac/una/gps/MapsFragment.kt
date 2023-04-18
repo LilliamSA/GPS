@@ -34,16 +34,9 @@ class MapsFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var maps: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var previousLocation: LatLng? = null
 
 
-/*
-    private fun createNewPing(): Ping {
-        val newPingId = nextPingId++
-        val newPing = Ping(LatLng(0.0, 0.0))
-        newPing.id = newPingId
-        return newPing
-    } */
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,37 +75,8 @@ class MapsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-/*
-        // Obtén una referencia al botón de zoom in
-        val btnZoomIn = view.findViewById<Button>(R.id.btnZoomIn)
 
-        // Agrega un listener al botón de zoom in
-        btnZoomIn.setOnClickListener {
-            // Obtén una referencia al mapa
-            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-            mapFragment?.getMapAsync { googleMap ->
-                // Incrementa el nivel de zoom
-                val currentZoom = googleMap.cameraPosition.zoom
-                googleMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom + 1))
-            }
-        }
- */
-/*
 
-        // Obtén una referencia al botón de zoom out
-        val btnZoomOut = view.findViewById<Button>(R.id.btnZoomOut)
-
-        // Agrega un listener al botón de zoom out
-        btnZoomOut.setOnClickListener {
-            // Obtén una referencia al mapa
-            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-            mapFragment?.getMapAsync { googleMap ->
-                // Decrementa el nivel de zoom
-                val currentZoom = googleMap.cameraPosition.zoom
-                googleMap.moveCamera(CameraUpdateFactory.zoomTo(currentZoom - 1))
-            }
-        }
-        */
         // Obtén una referencia al botón de actualización
         val btnactualizar = view.findViewById<Button>(R.id.btnActualizar)
 
