@@ -17,21 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <!--
-        <Button
-            android:id="@+id/btnZoomIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/btnZoomOut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnZoomIn"
-            android:text="-"
-            android:textSize="24sp" /> -->
         <Button
             android:id="@+id/btnActualizar"
             android:layout_width="wrap_content"
@@ -50,8 +36,8 @@
             android:stepSize="1"
             android:accessibilityLiveRegion="polite"
             android:contentDescription="Selecciona la altura en centímetros"
-            app:trackColor="@color/custom_track_color"
-            app:thumbColor="@color/custom_thumb_color" />
+            app:trackColor="@color/title_text"
+            app:thumbColor="@color/light_grey" />
 
 
 
