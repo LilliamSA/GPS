@@ -8,11 +8,16 @@
     <string name="Acercade">Acerca de</string>
     <string name="Mapa">Ubicacion Actual</string>
     <string name="Configuration">Configuracion</string>
+    <string name="longitud">Longitud</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="latitud">Latitud</string>
+    <string name="include_coord">Incluir</string>
+    <string name="Poligono">Poligono</string>
     <integer-array name="default_zoom">
         <item>10</item>
         <item>15</item>
     </integer-array>
-
 
 
 </resources>

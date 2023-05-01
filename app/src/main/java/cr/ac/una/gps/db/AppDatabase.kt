@@ -7,12 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import cr.ac.una.gps.UbicacionDao
 import cr.ac.una.gps.converter.Converters
+import cr.ac.una.gps.dao.PoligonoDao
+import cr.ac.una.gps.entity.Poligono
 import cr.ac.una.gps.entity.Ubicacion
 
-@Database(entities = [Ubicacion::class], version = 1)
+@Database(entities = [Ubicacion::class,Poligono::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun ubicacionDao(): UbicacionDao
+    abstract fun poligonoDao(): PoligonoDao
 
     companion object {
         private var instance: AppDatabase? = null
@@ -23,8 +26,10 @@ abstract class AppDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         AppDatabase::class.java,
-                        "ubicaciones-database"
-                    ).build()
+                        "gps-database"
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
                 }
             }
             return instance!!

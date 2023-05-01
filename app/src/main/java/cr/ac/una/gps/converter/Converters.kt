@@ -13,4 +13,10 @@ class Converters {
     fun dateToTimestamp(date: Date?): Long? {
         return date?.time?.toLong()
     }
+
+    //convertir de string a double
+    @TypeConverter
+    fun stringToDouble(value: String?): Double? {
+        return value?.toDouble()
+    }
 }

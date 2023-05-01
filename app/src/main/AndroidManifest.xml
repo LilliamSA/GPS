@@ -4,7 +4,7 @@
     <!-- Permiso para obtener la ubicacion exacta por el gps -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Permiso para obtener la ubicacion por wifi o red -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="ACTION_APPLICATION_DETAILS_SETTINGS"/>
+    <uses-permission android:name="ACTION_APPLICATION_DETAILS_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -15,12 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GPS"
         tools:targetApi="31">
+        <activity
+            android:name=".AgregarUbicacionesActivity"
+            android:exported="false" />
 
         <service
             android:name=".LocationService"
             android:enabled="true"
-            android:exported="true"></service>
-
+            android:exported="true" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
