@@ -57,6 +57,9 @@ class AgregarUbicacionesActivity : AppCompatActivity() {
                 )
 
                 guardarUbicacionEnBaseDeDatos(entidad)
+                // Limpiar el contenido del EditText
+                latitudEditText.setText("")
+                longitudEditText.setText("")
                 //mensaje de confirmacion
                 Toast.makeText(this, "Ubicacion guardada", Toast.LENGTH_SHORT).show()
             } else {

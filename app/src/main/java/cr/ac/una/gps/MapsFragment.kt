@@ -1,6 +1,7 @@
 package cr.ac.una.gps
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.*
 import androidx.fragment.app.Fragment
 import android.os.Bundle
@@ -8,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.content.pm.PackageManager
-import android.location.Location
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +29,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import cr.ac.una.gps.dao.PoligonoDao
@@ -45,6 +46,8 @@ class MapsFragment : Fragment() {
     private lateinit var poligonoDao: PoligonoDao
     private lateinit var locationReceiver: BroadcastReceiver
     private lateinit var polygon: Polygon
+    private var selectedDate: Date? = null
+
 
 
     override fun onCreateView(
@@ -87,7 +90,29 @@ class MapsFragment : Fragment() {
                 polygon = maps.addPolygon(polygonOptions)
         }
 
-    }}
+    }
+        googleMap.setOnMarkerClickListener { marker ->
+            val latLng = LatLng(marker.position.latitude, marker.position.longitude)
+            if (PolyUtil.containsLocation(latLng, polygon.points, true)) {
+                AlertDialog.Builder(requireContext())
+                    .setMessage("El marcador esta dentro del poligono")
+                    .setPositiveButton("Ok") { dialog, _ ->
+                        dialog.dismiss()
+                        makePhoneCall()
+                    }
+                    .show()
+
+            } else {
+                AlertDialog.Builder(requireContext())
+                    .setMessage("El marcador esta fuera del poligono")
+                    .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
+            false
+        }
+
+
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -133,30 +158,21 @@ class MapsFragment : Fragment() {
                 insertEntity(entity)
                 getAllLocations()
 
+              /*  if(inside) {
+                   makePhoneCall()
+                }*/
+
                 println(latitud.toString() +"    " +longitud)
             }
         }
         context?.registerReceiver(locationReceiver, IntentFilter("ubicacionActualizada"))
     }
 
-   /* private fun createPolygon(): Polygon {
-
-        var ubicaciones: List<Poligono> = emptyList()
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                ubicaciones = poligonoDao.getAll() as List<Poligono>
-            }
-            val polygonOptions = PolygonOptions()
-            for (ubicacion in ubicaciones) {
-                val latLng = LatLng(ubicacion.latitude, ubicacion.longitude)
-                polygonOptions.add(latLng)
-            }
-            polygon = maps.addPolygon(polygonOptions)
-        }
-        return polygon!!
-
-    }*/
     private fun getAllLocations(): List<Ubicacion> {
+        // Cambiar el color de los marcadores dentro del polígono
+        val insideColor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+        val outsideColor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+
         val textoMarcador = sharedPreferences.getString("textoMarcador", "")
         var ubicaciones: List<Ubicacion> = emptyList()
         lifecycleScope.launch {
@@ -166,10 +182,19 @@ class MapsFragment : Fragment() {
             val markerOptionsList = mutableListOf<MarkerOptions>()
             for (ubicacion in ubicaciones) {
                 val latLng = LatLng(ubicacion.latitud + 0.0010, ubicacion.longitud + 0.0010)
-                markerOptionsList.add(
-                    MarkerOptions().position(latLng)
-                        .title(textoMarcador)
-                )
+                if (isLocationInsidePolygon(LatLng(ubicacion.latitud, ubicacion.longitud))) {
+                    markerOptionsList.add(
+                        MarkerOptions().position(latLng)
+                            .title(textoMarcador)
+                            .icon(insideColor)
+                    )
+                } else {
+                    markerOptionsList.add(
+                        MarkerOptions().position(latLng)
+                            .title(textoMarcador)
+                            .icon(outsideColor)
+                    )
+                }
             }
             // Agrega los marcadores al mapa
             for (markerOptions in markerOptionsList) {
@@ -187,7 +212,6 @@ class MapsFragment : Fragment() {
         }
     }
 
-
     private fun isLocationInsidePolygon(latLng: LatLng): Boolean {
         return PolyUtil.containsLocation(latLng, polygon.points, true)
     }
@@ -196,47 +220,13 @@ class MapsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
-    /*private fun getLocation() {
-        val textoMarcador = sharedPreferences.getString("textoMarcador", "")
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Pedir permisos de ubicación
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ), 1
-            )
-
-        } else {
-            // Obtener la ubicación actual y mostrarla en el mapa
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                if (maps != null) {
-                    // Ubicación obtenida con éxito
-                    if (location != null) {
-                        val currentLatLng = LatLng(location.latitude, location.longitude)
-                        addMarkerToMap(currentLatLng, textoMarcador)
-                        maps.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
-                    }
-                }
-            }
-        }
-    }*/
-
-    private fun addMarkerToMap(latLng: LatLng, title: String?) {
-        maps.addMarker(MarkerOptions().position(latLng).title(title))
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == 1) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
                     iniciaServicio()
+                    makePhoneCall()
                 }
             } else {
                 Toast.makeText(requireContext(), "Permiso denegado", Toast.LENGTH_SHORT).show()
@@ -260,6 +250,22 @@ class MapsFragment : Fragment() {
         } else {
             val intent = Intent(context, LocationService::class.java)
             context?.startService(intent)
+        }
+    }
+
+    fun makePhoneCall() {
+        val textoLlamada = sharedPreferences.getString("textoLlamada", "")
+        val intent = Intent(Intent.ACTION_CALL)
+        val permission = android.Manifest.permission.CALL_PHONE
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), 1)
+        } else {
+            intent.data = Uri.parse("tel:$textoLlamada")
+            startActivity(intent)
         }
     }
 }

@@ -61,6 +61,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.Polygon -> {
                 fragment = PoligonoFragment()
             }
+            R.id.Llamada -> {
+                fragment = LlamadaFragment()
+            }
         }
         supportFragmentManager
             .beginTransaction()

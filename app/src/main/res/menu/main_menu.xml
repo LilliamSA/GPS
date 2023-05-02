@@ -24,6 +24,11 @@
             android:icon="@android:drawable/ic_menu_preferences"
             android:title="@string/Poligono"
             />
+        <item
+            android:id="@+id/Llamada"
+            android:icon="@android:drawable/ic_menu_call"
+            android:title="@string/Llamada"
+            />
 
 
     </group>

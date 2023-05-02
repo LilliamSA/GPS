@@ -55,6 +55,9 @@ class ConfiguracionFragment : Fragment() {
         editor?.putString("textoMarcador", textoMarcador)
         editor?.apply()
 
+        // Limpiar el contenido del EditText
+        editMarcador.setText("")
+
         // Mostrar un mensaje de confirmación
         Toast.makeText(activity, "Marcador guardado correctamente", Toast.LENGTH_SHORT).show()
     }

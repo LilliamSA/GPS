@@ -14,6 +14,7 @@
     <string name="latitud">Latitud</string>
     <string name="include_coord">Incluir</string>
     <string name="Poligono">Poligono</string>
+    <string name="Llamada">Llamada</string>
     <integer-array name="default_zoom">
         <item>10</item>
         <item>15</item>
