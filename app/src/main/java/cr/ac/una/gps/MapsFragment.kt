@@ -32,6 +32,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
+import cr.ac.una.gps.dao.PoligonoDao
+import cr.ac.una.gps.entity.Poligono
 
 
 class MapsFragment : Fragment() {
@@ -40,6 +42,7 @@ class MapsFragment : Fragment() {
     private lateinit var maps: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var ubicacionDao: UbicacionDao
+    private lateinit var poligonoDao: PoligonoDao
     private lateinit var locationReceiver: BroadcastReceiver
     private lateinit var polygon: Polygon
 
@@ -64,29 +67,38 @@ class MapsFragment : Fragment() {
 
         // Crear un marcador en el mapa con el texto recuperado
         val latLng = LatLng(-14.0095923, 108.8152324)
-        val costaRica = LatLng(9.87466235556157, -83.97806864895828)
         googleMap.addMarker(MarkerOptions().position(latLng).title(textoMarcador))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14f))
-        polygon = createPolygon()
 
-        if(isLocationInsidePolygon(latLng)) {
-            Toast.makeText(requireContext(), "Dentro del poligono", Toast.LENGTH_LONG).show()
+        //inicializar la variable polygon
+        poligonoDao = AppDatabase.getInstance(requireContext()).poligonoDao()
+        var poligonos: List<Poligono> = emptyList()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                poligonos = poligonoDao.getAll() as List<Poligono>
+            }
+            val polygonOptions = PolygonOptions()
+            if (poligonos.isNotEmpty()) {
+                for (ubicacion in poligonos) {
+                    val latLng = LatLng(ubicacion.latitude, ubicacion.longitude)
+                    polygonOptions.add(latLng)
+                }
+                polygon = maps.addPolygon(polygonOptions)
         }
 
-      /*  if (!isLocationInsidePolygon(costaRica)){
-                Toast.makeText(requireContext(), "Fuera del poligono", Toast.LENGTH_LONG).show()
-        }*/
+    }}
 
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         ubicacionDao = AppDatabase.getInstance(requireContext()).ubicacionDao()
+        poligonoDao = AppDatabase.getInstance(requireContext()).poligonoDao()
 
         // Obtén una referencia al RangeSlider
         val rsHeight = view.findViewById<RangeSlider>(R.id.rs_height)
+
         // Agrega un listener al RangeSlider
         rsHeight.addOnChangeListener { slider, value, fromUser ->
             // Obtén una referencia al mapa
@@ -97,30 +109,19 @@ class MapsFragment : Fragment() {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(zoom))
             }
         }
+
         // Obtener el SupportMapFragment y notificar cuando el mapa esté listo para ser usado.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+
         iniciaServicio()
+
         locationReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val latitud = intent?.getDoubleExtra("latitud", 0.0) ?: 0.0
                 val longitud = intent?.getDoubleExtra("longitud", 0.0) ?: 0.0
-                val polygon = createPolygon().points
 
-                var inside = false
-                for (i in polygon.indices) {
-                    val j = if (i == polygon.size - 1) 0 else i + 1
-                    val xi = polygon[i].latitude
-                    val yi = polygon[i].longitude
-                    val xj = polygon[j].latitude
-                    val yj = polygon[j].longitude
-
-                    val intersect = ((yi > longitud) != (yj > longitud)) &&
-                            (latitud < (xj - xi) * (longitud - yi) / (yj - yi) + xi)
-                    if (intersect) {
-                        inside = !inside
-                    }
-                }
+                var inside = isLocationInsidePolygon(LatLng(latitud, longitud))
 
                 val entity = Ubicacion(
                     id = null,
@@ -133,22 +134,28 @@ class MapsFragment : Fragment() {
                 getAllLocations()
 
                 println(latitud.toString() +"    " +longitud)
-
             }
         }
         context?.registerReceiver(locationReceiver, IntentFilter("ubicacionActualizada"))
-
-
     }
 
-    private fun insertEntity(entity: Ubicacion) {
+   /* private fun createPolygon(): Polygon {
+
+        var ubicaciones: List<Poligono> = emptyList()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                ubicacionDao.insert(entity)
+                ubicaciones = poligonoDao.getAll() as List<Poligono>
             }
+            val polygonOptions = PolygonOptions()
+            for (ubicacion in ubicaciones) {
+                val latLng = LatLng(ubicacion.latitude, ubicacion.longitude)
+                polygonOptions.add(latLng)
+            }
+            polygon = maps.addPolygon(polygonOptions)
         }
-    }
+        return polygon!!
 
+    }*/
     private fun getAllLocations(): List<Ubicacion> {
         val textoMarcador = sharedPreferences.getString("textoMarcador", "")
         var ubicaciones: List<Ubicacion> = emptyList()
@@ -172,18 +179,15 @@ class MapsFragment : Fragment() {
         return ubicaciones
     }
 
-    private fun createPolygon(): Polygon {
-        val polygonOptions = PolygonOptions()
-        polygonOptions.add(LatLng(-14.0095923,108.8152324))
-        polygonOptions.add(LatLng( -43.3897529,104.2449199))
-        polygonOptions.add(LatLng( -51.8906238,145.7292949))
-        polygonOptions.add(LatLng( -31.7289525,163.3074199))
-        polygonOptions.add(LatLng( -7.4505398,156.2761699))
-        polygonOptions.add(LatLng( -14.0095923,108.8152324))
-        return maps.addPolygon(polygonOptions)
-
-
+    private fun insertEntity(entity: Ubicacion) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                ubicacionDao.insert(entity)
+            }
+        }
     }
+
+
     private fun isLocationInsidePolygon(latLng: LatLng): Boolean {
         return PolyUtil.containsLocation(latLng, polygon.points, true)
     }
