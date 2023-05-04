@@ -18,6 +18,9 @@
         <activity
             android:name=".AgregarUbicacionesActivity"
             android:exported="false" />
+        <activity
+            android:name=".dataPicker_Activity"
+            android:exported="false" />
 
         <service
             android:name=".LocationService"

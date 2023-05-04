@@ -11,7 +11,7 @@ import cr.ac.una.gps.dao.PoligonoDao
 import cr.ac.una.gps.entity.Poligono
 import cr.ac.una.gps.entity.Ubicacion
 
-@Database(entities = [Ubicacion::class,Poligono::class], version = 2)
+@Database(entities = [Ubicacion::class,Poligono::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun ubicacionDao(): UbicacionDao

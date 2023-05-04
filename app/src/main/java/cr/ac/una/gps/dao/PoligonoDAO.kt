@@ -12,10 +12,6 @@ interface PoligonoDao {
 
     @Query("SELECT * FROM poligono")
     fun getAll(): List<Poligono?>?
-
-    @Query("SELECT * FROM poligono WHERE id = :id")
-    fun get(id: Int): Poligono?
-
     @Update
     fun update(entity: Poligono)
 

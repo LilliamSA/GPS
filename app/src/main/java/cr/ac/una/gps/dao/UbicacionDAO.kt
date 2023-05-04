@@ -13,4 +13,6 @@ interface UbicacionDao {
 
     @Query("SELECT * FROM ubicacion")
     fun getAll(): List<Ubicacion?>?
+    @Query("SELECT * FROM Ubicacion WHERE fecha = :date")
+    fun getByDate(date: String): List<Ubicacion>
 }
