@@ -6,15 +6,15 @@
     <string name="drawer_close">Cerrar</string>
     <string name="api_key">AIzaSyAcpnFVakm5l58PnZe9qtiGrIi0ODOK0Is</string>
     <string name="Acercade">Acerca de</string>
-    <string name="Mapa">Ubicacion Actual</string>
+    <string name="Mapa">Mapa en tiempo real</string>
     <string name="Configuration">Configuracion</string>
     <string name="longitud">Longitud</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
     <string name="latitud">Latitud</string>
     <string name="include_coord">Incluir</string>
-    <string name="Poligono">Poligono</string>
-    <string name="Llamada">Llamada</string>
+    <string name="Poligono">Área restringida</string>
+    <string name="Llamada">Teléfono de emergencia</string>
     <integer-array name="default_zoom">
         <item>10</item>
         <item>15</item>

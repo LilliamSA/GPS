@@ -21,6 +21,9 @@
         <activity
             android:name=".dataPicker_Activity"
             android:exported="false" />
+        <activity
+            android:name=".PoligonoFragment" />
+
 
         <service
             android:name=".LocationService"

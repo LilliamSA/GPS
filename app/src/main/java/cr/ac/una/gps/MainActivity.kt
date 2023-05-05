@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.maps -> {
                 fragment = MapsFragment()
             }
-            R.id.Acercade -> {
+        /*    R.id.Acercade -> {
                 fragment = AcercaDeFragment()
                 fragment.show(supportFragmentManager, "dialogo_acerca_de")
                 return true
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.Configurations -> {
                 fragment = ConfiguracionFragment()
-            }
+            }*/
             R.id.Polygon -> {
                 fragment = PoligonoFragment()
             }

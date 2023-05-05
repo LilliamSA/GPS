@@ -9,7 +9,7 @@
             android:id="@+id/maps"
             android:icon="@android:drawable/ic_dialog_map"
             android:title="@string/Mapa" />
-        <item
+      <!--  <item
             android:id="@+id/Acercade"
             android:icon="@android:drawable/ic_menu_info_details"
             android:title="@string/Acercade"
@@ -18,7 +18,7 @@
             android:id="@+id/Configurations"
             android:icon="@android:drawable/ic_menu_preferences"
             android:title="@string/Configuration"
-       />
+       />-->
         <item
             android:id="@+id/Polygon"
             android:icon="@android:drawable/ic_menu_preferences"

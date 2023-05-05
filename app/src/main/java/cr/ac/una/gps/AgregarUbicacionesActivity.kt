@@ -42,8 +42,7 @@ class AgregarUbicacionesActivity : AppCompatActivity() {
 
         //boton atras que me lleve donde se listan las ubicaciones
         atrasButton.setOnClickListener {
-            val intent = Intent(this, PoligonoFragment::class.java)
-            startActivity(intent)
+            finish()
         }
         guardarButton.setOnClickListener {
             val latitudString = latitudEditText.text.toString()

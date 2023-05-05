@@ -51,7 +51,7 @@ class MapsFragment : Fragment() {
     private lateinit var ubicacionDao: UbicacionDao
     private lateinit var poligonoDao: PoligonoDao
     private lateinit var locationReceiver: BroadcastReceiver
-    private lateinit var polygon: Polygon
+    private var polygon: Polygon ?= null
     lateinit var filterButton: Button
 
 
@@ -86,7 +86,7 @@ class MapsFragment : Fragment() {
                 for (ubicacion in poligonos) {
                     polygonOptions.add(LatLng(ubicacion.latitude, ubicacion.longitude))
                 }
-                polygon = maps.addPolygon(polygonOptions)
+               polygon = maps.addPolygon(polygonOptions)
             } else {
                 AlertDialog.Builder(requireContext())
                     .setMessage("No hay poligono registrado")
@@ -100,7 +100,7 @@ class MapsFragment : Fragment() {
         }
         googleMap.setOnMarkerClickListener { marker ->
             val latLng = LatLng(marker.position.latitude, marker.position.longitude)
-            if (PolyUtil.containsLocation(latLng, polygon.points, true)) {
+            if (PolyUtil.containsLocation(latLng, polygon?.points, true)) {
                 AlertDialog.Builder(requireContext())
                     .setMessage("El marcador esta dentro del poligono")
                     .setPositiveButton("Ok") { dialog, _ ->
@@ -255,7 +255,7 @@ class MapsFragment : Fragment() {
     }
 
     private fun isLocationInsidePolygon(latLng: LatLng): Boolean {
-        return PolyUtil.containsLocation(latLng, polygon.points, true)
+        return PolyUtil.containsLocation(latLng, polygon?.points,true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
