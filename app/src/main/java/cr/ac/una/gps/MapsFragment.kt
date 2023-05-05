@@ -73,10 +73,12 @@ class MapsFragment : Fragment() {
         //  Recuperar el valor guardado en SharedPreferences
         val textoMarcador = sharedPreferences.getString("textoMarcador", "")
 
-        getAllLocations()
-        //inicializar la variable polygon
-        poligonoDao = AppDatabase.getInstance(requireContext()).poligonoDao()
-        var poligonos: List<Poligono> = emptyList()
+        lifecycleScope.launch {
+            // llamada a dibujarPoligono() dentro de una corrutina
+            polygon = dibujarPoligono()
+            getAllLocations()
+        }
+       /* var poligonos: List<Poligono> = emptyList()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 poligonos = poligonoDao.getAll() as List<Poligono>
@@ -97,7 +99,7 @@ class MapsFragment : Fragment() {
 
             }
 
-        }
+        }*/
         googleMap.setOnMarkerClickListener { marker ->
             val latLng = LatLng(marker.position.latitude, marker.position.longitude)
             if (PolyUtil.containsLocation(latLng, polygon?.points, true)) {
@@ -200,6 +202,29 @@ class MapsFragment : Fragment() {
         }
         context?.registerReceiver(locationReceiver, IntentFilter("ubicacionActualizada"))
     }
+    suspend fun dibujarPoligono(): Polygon {
+        val poligonoDao = AppDatabase.getInstance(requireContext()).poligonoDao()
+        var poligonos: List<Poligono> = emptyList()
+        withContext(Dispatchers.IO) {
+            poligonos = poligonoDao.getAll() as List<Poligono>
+        }
+        val polygonOptions = PolygonOptions()
+        if (poligonos.isNotEmpty()) {
+            for (ubicacion in poligonos) {
+                polygonOptions.add(LatLng(ubicacion.latitude, ubicacion.longitude))
+            }
+            return maps.addPolygon(polygonOptions)
+        } else {
+            AlertDialog.Builder(requireContext())
+                .setMessage("No hay poligono registrado")
+                .setPositiveButton("Ok") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+        return maps.addPolygon(polygonOptions)
+    }
+
 
     private fun getAllLocations() : List<Ubicacion> {
         // Cambiar el color de los marcadores dentro del polígono
@@ -255,7 +280,7 @@ class MapsFragment : Fragment() {
     }
 
     private fun isLocationInsidePolygon(latLng: LatLng): Boolean {
-        return PolyUtil.containsLocation(latLng, polygon.points,true)
+        return polygon != null && PolyUtil.containsLocation(latLng, polygon?.points, true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
