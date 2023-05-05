@@ -51,7 +51,7 @@ class MapsFragment : Fragment() {
     private lateinit var ubicacionDao: UbicacionDao
     private lateinit var poligonoDao: PoligonoDao
     private lateinit var locationReceiver: BroadcastReceiver
-    private var polygon: Polygon ?= null
+    private lateinit var polygon: Polygon
     lateinit var filterButton: Button
 
 
@@ -255,7 +255,7 @@ class MapsFragment : Fragment() {
     }
 
     private fun isLocationInsidePolygon(latLng: LatLng): Boolean {
-        return PolyUtil.containsLocation(latLng, polygon?.points,true)
+        return PolyUtil.containsLocation(latLng, polygon.points,true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
